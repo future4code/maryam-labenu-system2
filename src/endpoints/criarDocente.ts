@@ -1,8 +1,18 @@
 import { Request, Response } from 'express';
 import { connection } from '../data/connections';
 
-export const criarDocente = async (req: Request, res: Response) => {
+export const criarDocente = async (req: Request, res: Response): Promise<any> => {
     const {name, email, birthDate, turmaId, espacialidades} = req.body;
+    
+    const formatDate = (date: string) => {
+        const day = date.split('/')[0];
+        const month = date.split('/')[1];
+        const year = date.split('/')[2];
+        return `${year}/${month}/${day}`;
+    }
+    const birthDateFormated = formatDate(birthDate);
+
+
     try {
         if(!name || !email || !birthDate || !turmaId || !espacialidades){
             throw new Error('Dados insuficientes');
@@ -11,8 +21,9 @@ export const criarDocente = async (req: Request, res: Response) => {
             id: Date.now().toString().slice(3),
             name,
             email,
-            birthDate,
-            turmaId
+            birthDate: birthDateFormated,
+            turmaId,
+            espacialidades
 
         })
 
